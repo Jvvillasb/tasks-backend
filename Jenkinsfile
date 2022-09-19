@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Quality Gate'){
             steps {
-                sleep(15)
+                sleep(5)
                 timeout(time: 1, unit: 'MINUTES'){
                     waitForQualityGate abortPipeline: true
                 }
@@ -39,6 +39,15 @@ pipeline {
                 dir('api-test') {
                     git branch: 'main', url: 'https://github.com/Jvvillasb/tasks-api-test'
                     bat 'mvn test'
+                }
+            }
+        }
+         stage('Deploy Frontend'){
+            steps {
+                dir('frontend'){
+                    git branch: 'main', url: 'https://github.com/Jvvillasb/tasks-frontend'
+                    bat 'mvn clean package'
+                    deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
         }
