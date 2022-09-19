@@ -46,7 +46,7 @@ pipeline {
             steps {
                 dir('frontend'){
                     git branch: 'master', url: 'https://github.com/Jvvillasb/tasks-frontend'
-                    bat 'mvn clean package'
+                    bat 'mvn package'
                     deploy adapters: [tomcat8(credentialsId: 'TomcatLogin', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
                 }
             }
